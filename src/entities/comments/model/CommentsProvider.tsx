@@ -80,7 +80,6 @@ export const CommentsProvider: FC<Props> = ({ children }) => {
   }
 
   useEffect(() => {
-    console.log(hash)
     if (hash === 'comments') {
       openCommentsHandler()
     } else {
@@ -90,7 +89,6 @@ export const CommentsProvider: FC<Props> = ({ children }) => {
 
   // Закрываем комменты, когда уходим со страницы
   useEffect(() => {
-    console.log(router.route)
     closeHandler()
   }, [closeHandler, router.route])
 
