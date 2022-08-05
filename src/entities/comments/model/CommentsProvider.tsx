@@ -1,15 +1,17 @@
+import { useIsTabletAndBelow } from '@razrabs-ui/responsive'
 import { useRouter } from 'next/router'
 import {
   createContext,
   Dispatch,
   FC,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react'
-import { useBoolean } from 'shared/lib'
+import { useBoolean, useHash } from 'shared/lib'
 import { commentAdapter } from '../lib/commentAdapter'
 import { Comment, useCommentsLazyQuery } from '.'
 
@@ -39,15 +41,34 @@ type Props = {
 
 export const CommentsProvider: FC<Props> = ({ children }) => {
   const router = useRouter()
+  const isTabletAndBelow = useIsTabletAndBelow()
 
   const [commentsLazyQuery, { data, startPolling, stopPolling }] =
     useCommentsLazyQuery()
   const [postUid, setPostUid] = useState<string | undefined>(undefined)
-  const [opened, { trusty: openHandler, falsy: closeHandler }] = useBoolean()
+  const [opened, { trusty: openCommentsHandler, falsy: closeCommentsHandler }] =
+    useBoolean()
   const comments = useMemo(
     () => data?.comments.items.map((comment) => commentAdapter(comment)) || [],
     [data?.comments.items],
   )
+  const [hash, updateHash] = useHash()
+
+  const openHandler = useCallback(() => {
+    if (isTabletAndBelow) {
+      updateHash('comments')
+    }
+
+    openCommentsHandler()
+  }, [isTabletAndBelow, openCommentsHandler, updateHash])
+
+  const closeHandler = useCallback(() => {
+    if (isTabletAndBelow) {
+      updateHash('')
+    }
+
+    closeCommentsHandler()
+  }, [isTabletAndBelow, closeCommentsHandler, updateHash])
 
   const value: CommentsContextValue = {
     opened,
@@ -58,8 +79,18 @@ export const CommentsProvider: FC<Props> = ({ children }) => {
     closeHandler,
   }
 
+  useEffect(() => {
+    console.log(hash)
+    if (hash === 'comments') {
+      openCommentsHandler()
+    } else {
+      closeCommentsHandler()
+    }
+  }, [openCommentsHandler, closeCommentsHandler, hash])
+
   // Закрываем комменты, когда уходим со страницы
   useEffect(() => {
+    console.log(router.route)
     closeHandler()
   }, [closeHandler, router.route])
 
