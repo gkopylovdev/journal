@@ -831,6 +831,7 @@ export type Query = {
   post: Post;
   posts: PostPagination;
   postsByFeed: PostPagination;
+  postsByTag: PostPagination;
   priorities: Array<PriorityItem>;
   priority: Priority;
   profile: Profile;
@@ -918,6 +919,13 @@ export type QueryPostsArgs = {
 
 
 export type QueryPostsByFeedArgs = {
+  page?: InputMaybe<Scalars['Int']>;
+  perPage?: InputMaybe<Scalars['Int']>;
+  uid: Scalars['UID'];
+};
+
+
+export type QueryPostsByTagArgs = {
   page?: InputMaybe<Scalars['Int']>;
   perPage?: InputMaybe<Scalars['Int']>;
   uid: Scalars['UID'];

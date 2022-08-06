@@ -1,0 +1,10 @@
+query PostsByTag($uid: UID!, $page: Int, $perPage: Int) {
+  postsByTag(uid: $uid, page: $page, perPage: $perPage) {
+    items {
+      uid,
+      title,
+      previewUrl,
+      createdAt
+    }
+  }
+}

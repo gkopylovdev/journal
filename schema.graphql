@@ -494,6 +494,7 @@ type Query {
   post(uid: UID!): Post!
   posts(page: Int = 1, perPage: Int = 20): PostPagination!
   postsByFeed(page: Int = 1, perPage: Int = 20, uid: UID!): PostPagination!
+  postsByTag(page: Int = 1, perPage: Int = 20, uid: UID!): PostPagination!
   priorities: [PriorityItem!]!
   priority(uid: UID!): Priority!
   profile(uid: UID!): Profile!
